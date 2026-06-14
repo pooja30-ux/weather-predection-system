@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Weather Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css"/>
+   <title>NumPy Graph</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="numpygraph" href="graph.py"/>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+  <div class="logo">🌤 WeatherNow</div>
+
+  <nav>
+    <a href="#" class="active">Home</a>
+    <a href="#">Forecast</a>
+    <a href="#">Maps</a>
+    <a href="#">Alerts</a>
+    <a href="#">About</a>
+  </nav>
+
+  <div class="search">
+    <input type="text" placeholder="Search city...">
+  </div>
+</header>
+
+<!-- MAIN -->
+<div class="container">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-text">
+      <h2>📍 Kathmandu, Nepal</h2>
+      <p>Monday, 5 June</p>
+      <h1>28°C</h1>
+      <p>Clear Sky / Sunny</p>
+    </div>
+  </section>
+
+  <!-- CARDS -->
+  <section class="cards">
+    <div class="card">
+      <h3>💧 Humidity</h3>
+      <p>60%</p>
+    </div>
+
+    <div class="card">
+      <h3>💨 Wind</h3>
+      <p>12 km/h</p>
+    </div>
+  </section>
+
+  <!-- CHART -->
+  
+
+  <h2>NumPy Data Graph</h2>
+<canvas id="myChart"></canvas>
+<!------graph in numpy-->
+<script>
+fetch("http://127.0.0.1:5000/data")
+    .then(res => res.json())
+    .then(data => {
+
+        const ctx = document.getElementById('myChart');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: data.x,
+                datasets: [{
+                    label: 'y = x²',
+                    data: data.y,
+                    borderColor: 'blue',
+                    fill: false
+                }]
+            }
+        });
+
+    });
+</script>
+
+  <!-- FORECAST -->
+  <section class="forecast">
+    <div class="forecast-card">Tue 🌧️ 24°C</div>
+    <div class="forecast-card">Wed ⛅ 26°C</div>
+    <div class="forecast-card">Thu ☀️ 29°C</div>
+  </section>
+
+</div>
+
+<script src="script.js"></script>
+<script>
+    const ctx = document.getElementById('tempChart');
+
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: ['Fri','Sat','Sun','Mon','Tue','Wed','Thu'],
+    datasets: [{
+      label: 'Temperature',
+      data: [22,24,25,28,24,26,29],
+      borderColor: '#1e88e5',
+      backgroundColor: 'rgba(30,136,229,0.1)',
+      tension: 0.4,
+      fill: true
+    }]
+  },
+  options: {
+    responsive: true
+  }
+});
+    </script>
+</script>
+<input type="number" id="humidity">
+<button onclick="predictTemp()">
+Predict
+</button>
+<script>  
+  async function predictTemp() {
+
+  const humidity =
+      document.getElementById("humidity").value;
+
+  const response = await fetch(
+      "http://localhost:5000/predict",
+      {
+          method: "POST",
+          headers: {
+              "Content-Type":
+              "application/json"
+          },
+          body: JSON.stringify({
+              humidity: humidity
+          })
+      }
+  );
+
+  const data = await response.json();
+
+  alert(
+      "Predicted Temp: " +
+      data.temperature
+  );
+}
+</script>
+</body>
+
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Weather Prediction</title>
+</head>
+
+<body>
+  <h2>Weather Prediction System</h2>
+
+  <input id="temp" placeholder="Temperature">
+  <input id="humidity" placeholder="Humidity">
+  <input id="wind" placeholder="Wind Speed">
+  <input id="pressure" placeholder="Pressure">
+  <input id="cloud" placeholder="Cloud Cover">
+  <input id="rain" placeholder="Rainfall">
+
+  <button onclick="predict()">Predict</button>
+
+  <h3 id="result"></h3>
+
+  <script>
+    async function predict() {
+      const data = {
+        temperature: parseFloat(document.getElementById("temp").value),
+        humidity: parseFloat(document.getElementById("humidity").value),
+        wind_speed: parseFloat(document.getElementById("wind").value),
+        pressure: parseFloat(document.getElementById("pressure").value),
+        cloud_cover: parseFloat(document.getElementById("cloud").value),
+        rainfall: parseFloat(document.getElementById("rain").value)
+      };
+
+      const response = await fetch("http://127.0.0.1:5000/predict", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
+
+      const result = await response.json();
+
+      document.getElementById("result").innerText =
+        "Predicted Temperature: " + result.predicted_temperature + "°C";
+    }
+  </script>
+</body>
+</html>
